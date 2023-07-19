@@ -1,24 +1,26 @@
-// ** React Imports
-import { useEffect, useState } from "react";
-import Joi from "joi";
+import React, { useEffect, useState } from "react";
+import { setLogin, setLoading, useCalculatorController } from "@/core/context";
 import { catchMessage, errorMessage } from "@/utils/showMessage";
-import { setLoading, useCalculatorController } from "@/core/context";
-import { login } from "@/controller/auth";
+import { register } from "@/controller/auth";
+import Joi from "joi";
 
-const Login = () => {
+function Register() {
   const [, dispatch] = useCalculatorController();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const validateFields = () => {
     try {
       const schema = Joi.object({
         username: Joi.string().required(),
         password: Joi.string().required(),
+        email: Joi.string().required(),
       });
       const { error } = schema.validate({
         username,
         password,
+        email,
       });
       if (error) {
         errorMessage(error.details[0].message);
@@ -32,14 +34,14 @@ const Login = () => {
     }
   };
 
-  const loginHandler = async () => {
+  const registerHandler = async () => {
     try {
       let validationResult = validateFields();
       if (!validationResult) {
         return;
       }
       setLoading(dispatch, true);
-      const res = await login(username, password);
+      const res = await register({ username, password, email });
       setLoading(dispatch, false);
       if (res.success) {
         setLogin(dispatch, {
@@ -65,37 +67,47 @@ const Login = () => {
   useEffect(() => {}, []);
 
   return (
-    <section className="content-area">
-      <div className="container">
-        <div xs={12} md={12} lg={12}>
-          <h1 className="login-title">Sign In</h1>
+    <>
+      <section className="content-area">
+        <div className="container">
+          <div xs={3} md={4} lg={4}>
+            <h1 className="login-title">Register</h1>
+          </div>
+          User Name
+          <input
+            type="text"
+            value={username}
+            onChange={(event) => {
+              setUsername(event.target.value);
+            }}
+          />
+          Password
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value);
+            }}
+          />
+          Email
+          <input
+            type="text"
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+            }}
+          />
+          <button
+            onClick={() => {
+              registerHandler();
+            }}
+          >
+            Register
+          </button>
         </div>
-        User Name
-        <input
-          type="text"
-          value={username}
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
-        />
-        Password
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => {
-            setPassword(event.target.value);
-          }}
-        />
-        <button
-          onClick={() => {
-            loginHandler();
-          }}
-        >
-          Sign In
-        </button>
-      </div>
-    </section>
+      </section>
+    </>
   );
-};
+}
 
-export default Login;
+export default Register;

@@ -1,3 +1,6 @@
+import Changepassword from "@/components/Changepassword";
+import ForgetPassword from "@/components/Forgetpassword";
+import Register from "@/components/Register";
 import Login from "@/components/login";
 import Head from "next/head";
 
@@ -11,6 +14,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Login />
+      <Register />
+      <ForgetPassword />
+      <Changepassword />
     </>
   );
 }

@@ -32,3 +32,23 @@ export const register = async (newUser) => {
     return returnError(err);
   }
 };
+
+export const resetPassword = async (email) => {
+  try {
+    const url = `${config.apiserver}/dashboard/auth/resetpassword/`;
+    const user = await Axios.post(url, email);
+    return user.data;
+  } catch (err) {
+    return returnError(err);
+  }
+};
+
+export const changePassword = async (newpassword) => {
+  try {
+    const url = `${config.apiserver}/dashboard/auth/resetpassword/`;
+    const user = await Axios.post(url, newpassword);
+    return user.data;
+  } catch (err) {
+    return returnError(err);
+  }
+};
